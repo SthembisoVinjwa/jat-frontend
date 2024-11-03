@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs")%>
+
+    <head>
+        <link rel="stylesheet" href="auth.css">
+    </head>
+
+    <body>
+        <%- include("./partials/nav.ejs")%>
+            <main>
+                <div class="login-div">
+                    <form name="loginForm" class="login-form" id="login" onsubmit="event.preventDefault(); signin()">
+                        <br>
+                        <br>
+                        <label for="email">Email:</label>
+                        <input type="email" class="search" name="email" id="email" required>
+                        <br>
+                        <br>
+                        <label for="password">Password:</label>
+                        <input type="password" class="search" name="password" id="password" required>
+                        <br>
+                        <div class="form-message">
+                            <p id="formMessage"></p>
+                        </div>
+                        <div class="login-btn-container">
+                            <input type="submit" class="main-btn" name="login" value="Sign in">
+                        </div>
+                        <div class="message-container">
+                            <p>Don't have an account? <a href="/signup">Sign up</a></p>
+                        </div>
+                    </form>
+                </div>
+            </main>
+            <%- include("./partials/footer.ejs")%>
+                <script src="script.js"></script>
+                <script src="login.js"></script>
+    </body>
+
+</html>

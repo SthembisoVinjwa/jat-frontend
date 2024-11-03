@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs")%>
+<body>
+    <div class="overlay">
+        
+    </div>
+    <div class="addform-div">
+        <div class="addform-options">
+            <p>Job Entry</p>
+            <i class="fa fa-times-circle" id="close-form" aria-hidden="true"></i>
+        </div>
+        <form class="job-form" id="job-form" onsubmit="event.preventDefault(); createJob()">
+            <label for="company">Company name:</label>
+            <input type="text" id="job-company" class="search job-company" name="company" placeholder="Company name" required>
+            <br>
+            <br>
+            <label for="role">Role:</label>
+            <input type="text" id="job-role" class="search job-role" name="role" placeholder="Role" required>
+            <br>
+            <br>
+            <label for="status">Select application stage:</label>
+            <select name="status" id="job-status" class="job-status">
+                <option value="not-applied">Not Applied</option>
+                <option value="applied">Applied</option>
+                <option value="interview">Interview</option>
+                <option value="offer">Offer</option>
+            </select>
+            <br>
+            <br>
+            <label for="job-date">Date:</label>
+            <input type="date" id="job-date" class="search job-date" name="job-date"/>
+            <br>
+            <br>
+            <label for="link" class="link-label">Link:</label>
+            <input type="text" id="job-link" class="search link-input" name="link" placeholder="Link">
+            <br>
+            <br>
+            <label for="notes" class="notes-label">Notes:</label>
+            <textarea name="notes" id="job-notes" class="notes" placeholder="Notes about the job"></textarea>
+            <br>
+            <br>
+            <div class="submitForm-div">
+                <input type="submit" class="main-btn submit-job-btn" id="create-job" value="Create">
+            </div>
+        </form>
+    </div>
+    <div class="addform-div" id="showJob">
+        <div class="addform-options">
+            <p>Job Entry</p>
+            <i class="fa fa-times-circle" id="close-showform" aria-hidden="true"></i>
+        </div>
+        <form class="job-form" id="job-form" onsubmit="event.preventDefault();">
+            <label for="company">Company name:</label>
+            <p class="job-info" id="show-company">Google</p>
+            <br>
+            <br>
+            <label for="role">Role:</label>
+            <p class="job-info" id="show-role">Software Engineer</p>
+            <br>
+            <br>
+            <label for="status">Application stage:</label>
+            <p class="job-info" id="show-status">Not-Applied</p>
+            <br>
+            <br>
+            <label for="job-date">Date:</label>
+            <p class="job-info" id="show-date">11/3/2024</p>
+            <br>
+            <br>
+            <label for="link" class="link-label">Link:</label>
+            <p class="job-info link-info" id="show-link">www.engineer.com/as</p>
+            <i class="fa fa-clipboard" data-tooltip="copy" id="copy-link" aria-hidden="true"></i>
+            <br>
+            <br>
+            <label for="notes" class="notes-label">Notes:</label>
+            <textarea name="notes" id="show-notes" class="notes" placeholder="Notes about the job"></textarea>
+            <br>
+            <br>
+            <div class="submitForm-div">
+                <input type="submit" class="main-btn submit-job-btn" id="edit-job" value="Edit">
+            </div>
+        </form>
+    </div>
+    <div class="addform-div" id="update-job">
+        <div class="addform-options">
+            <p>Job Entry</p>
+            <i class="fa fa-times-circle" id="update-close-form" aria-hidden="true"></i>
+        </div>
+        <form class="job-form" id="update-job-form" onsubmit="event.preventDefault(); updateJob()">
+            <label for="company">Company name:</label>
+            <input type="text" id="update-job-company" class="search job-company" name="company" placeholder="Company name" required>
+            <br>
+            <br>
+            <label for="role">Role:</label>
+            <input type="text" id="update-job-role" class="search job-role" name="role" placeholder="Role" required>
+            <br>
+            <br>
+            <label for="status">Select application stage:</label>
+            <select name="status" id="update-job-status" class="job-status">
+                <option value="not-applied">Not Applied</option>
+                <option value="applied">Applied</option>
+                <option value="interview">Interview</option>
+                <option value="offer">Offer</option>
+            </select>
+            <br>
+            <br>
+            <label for="job-date">Date:</label>
+            <input type="date" id="update-job-date" class="search job-date" name="job-date"/>
+            <br>
+            <br>
+            <label for="link" class="link-label">Link:</label>
+            <input type="text" id="update-job-link" class="search link-input" name="link" placeholder="Link">
+            <br>
+            <br>
+            <label for="notes" class="notes-label">Notes:</label>
+            <textarea name="notes" id="update-job-notes" class="notes" placeholder="Notes about the job"></textarea>
+            <br>
+            <br>
+            <div class="submitForm-div">
+                <input type="submit" class="main-btn submit-job-btn" id="update-job" value="Update">
+            </div>
+        </form>
+    </div>
+    <%- include("./partials/nav.ejs")%>
+    <main>
+        <section class="main-table">
+            <div class="options">
+                <div class="options-container">
+                    <input type="text" id="search-input" class="search" name="search" placeholder="Search">
+                    <i class="fa fa-search" data-tooltip="search" aria-hidden="true"></i>
+                    <i class="fa fa-filter" data-tooltip="filter" aria-hidden="true"></i>
+                    <div class="sort">
+                        <i class="fa fa-angle-up" data-tooltip="sort asc" id="asc" aria-hidden="true"></i>
+                        <i class="fa fa-angle-down" data-tooltip="sort dsc" id="dsc" aria-hidden="true"></i>
+                    </div>
+                    <!-- <i class="fa fa-sort" aria-hidden="true"></i> -->
+                </div>
+                <div class="filter-container">
+                    <ul class="filter-dropdown">
+                        <li id="company-filter"><p>Company</p></li>
+                        <li id="role-filter"><p>Role</p></li>
+                        <li id="date-filter"><p>Date</p></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="table">
+                <ul class="table-ul">
+                    <li class="not-applied">
+                        <p class="category-title">Not Applied <span id="not-applied-count">0</span></p>
+                    </li>
+                    <li class="applied">
+                        <p class="category-title">Applied <span id="applied-count">0</span></p>
+                    </li>
+                    <li class="interview">
+                        <p class="category-title">Interview <span id="interview-count">0</span></p>
+                    </li>
+                    <li class="offer">
+                        <p class="category-title">Offer <span id="offer-count">0</span></p>
+                        <!-- <div class="job">
+                            <div class="job-title">
+                                <p>Software Developer - H&M</p>
+                            </div>
+                            <div class="delete-job">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </div>
+                        </div> -->
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="add-job">
+            <i id="add-job" class="fa fa-plus-square" aria-hidden="true"></i>
+        </section>
+    </main>
+    <%- include("./partials/footer.ejs")%>
+    <script src="script.js"></script>
+    <script src="jobs.js"></script>
+    <script src="options.js"></script>
+</body>
+</html>
