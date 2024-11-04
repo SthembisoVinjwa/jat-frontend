@@ -49,6 +49,10 @@ function sortDscByFilter(filterType, data) {
 }
 
 function displayJobs() {
+    if (access_token === '' || access_token === null) {
+        return;
+    }
+
     fetch(API_BASE_URL + '/api/applications', {
         method: 'GET',
         headers: {
@@ -62,7 +66,6 @@ function displayJobs() {
             originalData = newData;
         });
     }).catch(err => {
-        alert(err);
     });
 }
 
@@ -301,6 +304,11 @@ closeAddForm.addEventListener('click', function() {
 });
 
 function createJob() {
+    if (access_token === '' || access_token === null) {
+        window.location.href = '/login';
+        return;
+    }
+
     const company = document.getElementById('job-company').value;
     const role = document.getElementById('job-role').value;
     const status = document.getElementById('job-status').value;
@@ -332,7 +340,7 @@ function createJob() {
     });
 }
 
-function updateJob(id) {
+function updateJob() {
     const company = document.getElementById('update-job-company').value;
     const role = document.getElementById('update-job-role').value;
     const status = document.getElementById('update-job-status').value;
