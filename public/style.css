@@ -308,12 +308,12 @@ main {
 .options .fa-search {
     margin: auto 0;
     margin-left: 5px;
-    font-size: 15px;
+    font-size: 18px;
 }
 
 .options .fa-filter {
     margin: auto 14px;
-    font-size: 14px;
+    font-size: 17px;
 }
 
 .options .fa-sort, .options .fa-filter, .options .fa-search:hover {
@@ -331,7 +331,7 @@ main {
 
 .sort i {
     cursor: pointer;
-    font-size: 14px;
+    font-size: 17px;
     line-height: 13px;
 }
 
