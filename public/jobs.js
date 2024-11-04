@@ -287,6 +287,7 @@ function openOverlay() {
 
 addBtn.onclick = function() {
 	if (access_token === '' || access_token === null) {
+		window.location.href = '/login';
 		return;
 	}
 	
