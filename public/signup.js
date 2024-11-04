@@ -33,7 +33,7 @@ function signup() {
 
     // send fetch request
     let status = 404;
-    fetch('http://localhost:8080/api/users/register', {
+    fetch(API_BASE_URL + '/api/users/register', {
         method: 'POST',
         headers: {
             'Content-Type':'application/json'
