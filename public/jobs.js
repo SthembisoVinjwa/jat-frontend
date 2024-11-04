@@ -286,6 +286,10 @@ function openOverlay() {
 }
 
 addBtn.onclick = function() {
+	if (access_token === '' || access_token === null) {
+		return;
+	}
+	
     if (!overlayOpen) {
         openOverlayForm();
     } else {
