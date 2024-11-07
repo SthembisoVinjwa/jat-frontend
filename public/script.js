@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://jat-backend.onrender.com' //'http://localhost:8080' 
+const API_BASE_URL = 'https://jat-backend.onrender.com';
 
 let loginButton = document.getElementById('login-btn');
 let access_token = document.cookie.split('=')[1];

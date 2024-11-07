@@ -8,6 +8,12 @@ let appliedSpan = document.getElementById('applied-count');
 let interviewSpan = document.getElementById('interview-count');
 let offerSpan = document.getElementById('offer-count');
 
+let addBtn = document.getElementById('add-job');
+let overlay = document.getElementsByClassName('overlay')[0];
+let formDiv = document.getElementsByClassName('addform-div')[0];
+let overlayOpen = false;
+let loader = document.getElementsByClassName('loader')[0];
+
 let sortAsc = localStorage.getItem('sortAsc') === null ? true : localStorage.getItem('sortAsc') === 'true';
 let filterType = localStorage.getItem('filterType') !== null ? localStorage.getItem('filterType') : 'role';
 var originalData;
@@ -53,6 +59,8 @@ function displayJobs() {
         return;
     }
 
+    showLoader();
+
     fetch(API_BASE_URL + '/api/applications', {
         method: 'GET',
         headers: {
@@ -62,6 +70,7 @@ function displayJobs() {
     }).then(result => {
         result.json().then(data => {
             let newData = (sortAsc == true ? sortAscByFilter(filterType, data) : sortDscByFilter(filterType, data));
+            closeLoader();
             insertJobs(newData);
             originalData = newData;
         });
@@ -81,6 +90,13 @@ function updateCategoryTotal(category, total) {
     }
 }
 
+function removeAllJobs() {
+    let jobs = document.getElementsByClassName('job');
+    Array.from(jobs).forEach(job => {
+        job.remove();
+    });
+}
+
 function insertJobs(data) {
     let notAppliedCount = 0, appliedCount = 0, offerCount = 0, interviewCount = 0;
 
@@ -91,7 +107,7 @@ function insertJobs(data) {
 
         let saveId = document.createElement('div');
         saveId.className = 'saveId';
-        saveId.style.display = 'none'
+        saveId.style.display = 'none';
         saveId.id = data[i]['applicationId'];
 
         let jobTitle = document.createElement('div');
@@ -100,6 +116,7 @@ function insertJobs(data) {
         pJobTitle.textContent = data[i]['role'] + ' - ' + data[i]['company'];
         jobTitle.appendChild(pJobTitle);
         jobTitle.addEventListener('click', function() {
+            showLoader();
             fetch(API_BASE_URL + '/api/applications/' + job.id, {
                 method: 'GET',
                 headers: {
@@ -109,8 +126,6 @@ function insertJobs(data) {
             }).then(result => {
                 result.json().then(data => {
                     let formDiv = document.getElementById('showJob');
-                    openOverlay();
-                    formDiv.style.display = 'block';
 
                     // close
                     let closeAddForm = document.getElementById('close-showform');
@@ -128,6 +143,8 @@ function insertJobs(data) {
                         }
                     }).then(result => {
                         result.json().then(data => {
+                            closeLoader();
+
                             let company = document.getElementById('show-company');
                             company.innerText = data['company'];
                             let role = document.getElementById('show-role');
@@ -167,6 +184,9 @@ function insertJobs(data) {
                                 let notesUpdate = document.getElementById('update-job-notes');
                                 notesUpdate.value = data['notes'];
 
+                                let showJobDiv = document.getElementById('showJob');
+                                showJobDiv.style.display = 'none';
+
                                 let updateJobDiv = document.getElementById('update-job');
                                 updateJobDiv.appendChild(saveId);
                                 updateJobDiv.style.display = 'block';
@@ -178,6 +198,9 @@ function insertJobs(data) {
                                     updateJobDiv.style.display = 'none';
                                 });
                             });
+
+                            openOverlay();
+                            formDiv.style.display = 'block';
                         });
                     }).catch(err => {
                         alert(err);
@@ -207,7 +230,8 @@ function insertJobs(data) {
                         alert(data)
                     })
                 } else {
-                    window.location.reload();
+                    removeAllJobs();
+                    displayJobs();
                 }
             }).catch(err => {
                 alert(err);
@@ -258,10 +282,16 @@ function resetJobList() {
     }
 }
 
-let addBtn = document.getElementById('add-job');
-let overlay = document.getElementsByClassName('overlay')[0];
-let formDiv = document.getElementsByClassName('addform-div')[0];
-let overlayOpen = false;
+
+function showLoader() {
+    openOverlay();
+    loader.style.display = 'block';
+}
+
+function closeLoader() {
+    loader.style.display = 'none';
+    closeOverlay();
+}
 
 function closeOverlayForm() {
     overlay.style.display = 'none'; 
@@ -286,11 +316,10 @@ function openOverlay() {
 }
 
 addBtn.onclick = function() {
-	if (access_token === '' || access_token === null) {
-		window.location.href = '/login';
-		return;
-	}
-	
+    if (access_token === '' || access_token === null) {
+        return;
+    }
+    
     if (!overlayOpen) {
         openOverlayForm();
     } else {
@@ -313,6 +342,9 @@ function createJob() {
         window.location.href = '/login';
         return;
     }
+
+    formDiv.style.zIndex = 0;
+    showLoader();
 
     const company = document.getElementById('job-company').value;
     const role = document.getElementById('job-role').value;
@@ -337,8 +369,12 @@ function createJob() {
         })
     }).then(result => {
         result.json().then(data => {
+            formDiv.style.zIndex = 2;
+            document.getElementById('job-form').reset();
+            closeLoader();
             closeOverlayForm();
-            window.location.reload();
+            removeAllJobs();
+            displayJobs();
         });
     }).catch(err => {
         alert(err);
@@ -353,7 +389,13 @@ function updateJob() {
     const date = document.getElementById('update-job-date').value.replaceAll('/', '-');
     const notes = document.getElementById('update-job-notes').value;
 
+    let updateJobDiv = document.getElementById('update-job');
+    let showJobDiv = document.getElementById('showJob');
     const update_id = document.getElementsByClassName('saveId')[0].id;
+
+    showLoader();
+    updateJobDiv.style.zIndex = 0;
+    showJobDiv.style.zIndex = 0;
 
     fetch(API_BASE_URL + '/api/applications/update/' + update_id, {
         method: 'PUT',
@@ -372,7 +414,14 @@ function updateJob() {
     }).then(result => {
         result.json().then(data => {
             closeOverlayForm();
-            window.location.reload();
+            removeAllJobs();
+            displayJobs();
+            closeLoader();
+
+            updateJobDiv.style.zIndex = 2;
+            showJobDiv.style.zIndex = 2;
+            updateJobDiv.style.display = 'none';
+            showJobDiv.style.display = 'none';
         });
     }).catch(err => {
         alert(err);
