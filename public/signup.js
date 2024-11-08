@@ -1,3 +1,7 @@
+let overlay = document.getElementsByClassName('overlay')[0];
+let overlayOpen = false;
+let loader = document.getElementsByClassName('loader')[0];
+
 function validateEmail(input) {
     let validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     return input.match(validRegex);
@@ -31,6 +35,9 @@ function signup() {
         }
     }
 
+    openOverlay();
+    showLoader();
+
     // send fetch request
     let status = 404;
     fetch(API_BASE_URL + '/api/users/register', {
@@ -45,6 +52,8 @@ function signup() {
             password: password
         }) 
     }).then(result => {
+        closeOverlay();
+        closeLoader();
         status = result.status;
         result.json().then(data => {
             if (status === 200) {
@@ -55,6 +64,8 @@ function signup() {
             }
         });
     }).catch(err => {
+        closeOverlay();
+        closeLoader();
         alert(err);
     });
 }
@@ -64,4 +75,24 @@ function setCookie (cName, cValue, expDays) {
     date.setTime(date.getTime() + expDays * 24 * 60 * 60 * 1000)
     const expires = 'expires=' + date.toUTCString()
     document.cookie = cName + '=' + cValue + '; ' + expires + '; path=/'
+}
+
+function openOverlay() {
+    overlay.style.display = 'block'; 
+    overlayOpen = true;
+}
+
+function closeOverlay() {
+    overlay.style.display = 'none'; 
+    overlayOpen = false;
+}    
+
+function showLoader() {
+    openOverlay();
+    loader.style.display = 'block';
+}
+
+function closeLoader() {
+    loader.style.display = 'none';
+    closeOverlay();
 }

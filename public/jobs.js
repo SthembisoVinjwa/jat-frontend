@@ -75,6 +75,7 @@ function displayJobs() {
             originalData = newData;
         });
     }).catch(err => {
+        closeLoader();
     });
 }
 
@@ -203,10 +204,12 @@ function insertJobs(data) {
                             formDiv.style.display = 'block';
                         });
                     }).catch(err => {
+                        closeLoader();
                         alert(err);
                     });
                 })
             }).catch(err => {
+                closeLoader();
                 alert(err);
             });
         });
@@ -218,6 +221,9 @@ function insertJobs(data) {
         deleteIcon.ariaHidden = 'true';
         deleteJob.appendChild(deleteIcon);
         deleteJob.onclick = function() {
+            openOverlay();
+            showLoader();
+
             fetch(API_BASE_URL + '/api/applications/delete/' + job.id, {
                 method: 'DELETE',
                 headers: {
@@ -225,6 +231,8 @@ function insertJobs(data) {
                     'Authorization': 'Bearer ' + access_token
                 }
             }).then(result => {
+                closeOverlay();
+                closeLoader();
                 if (result.status !== 200) {
                     result.json().then(data => {
                         alert(data)
@@ -234,6 +242,8 @@ function insertJobs(data) {
                     displayJobs();
                 }
             }).catch(err => {
+                closeOverlay();
+                closeLoader();
                 alert(err);
             });
         }
@@ -317,7 +327,7 @@ function openOverlay() {
 
 addBtn.onclick = function() {
     if (access_token === '' || access_token === null) {
-        return;
+        window.location.href = '/login';
     }
     
     if (!overlayOpen) {
@@ -377,6 +387,8 @@ function createJob() {
             displayJobs();
         });
     }).catch(err => {
+        closeLoader();
+        closeOverlayForm();
         alert(err);
     });
 }
@@ -424,6 +436,8 @@ function updateJob() {
             showJobDiv.style.display = 'none';
         });
     }).catch(err => {
+        closeOverlayForm();
+        closeLoader();
         alert(err);
     });
 }

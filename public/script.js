@@ -54,3 +54,31 @@ loginButton.onclick = function () {
         window.location.href = '/login';
     }   
 }
+
+function isOverlapping(div1, div2) {
+    const rect1 = div1.getBoundingClientRect();
+    const rect2 = div2.getBoundingClientRect();
+  
+    return !(
+      rect1.right < rect2.left ||
+      rect1.left > rect2.right ||
+      rect1.bottom < rect2.top ||
+      rect1.top > rect2.bottom
+    );
+}
+
+function adjustFooterPosition() {
+    try {
+        const footer = document.getElementsByTagName('footer')[0];
+        const addJob = document.getElementsByClassName('add-job')[0];
+
+        if (isOverlapping(addJob, footer)) {
+            footer.style.position = 'relative';
+        }
+    } catch(e) {
+    }
+}
+
+// Call the function initially and also on window resize
+adjustFooterPosition();
+window.addEventListener('resize', adjustFooterPosition);
