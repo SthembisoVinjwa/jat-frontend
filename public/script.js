@@ -55,34 +55,26 @@ loginButton.onclick = function () {
     }   
 }
 
-function isOverlapping(div1, div2) {
-    const rect1 = div1.getBoundingClientRect();
-    const rect2 = div2.getBoundingClientRect();
-  
-    return !(
-      rect1.right < rect2.left ||
-      rect1.left > rect2.right ||
-      rect1.bottom < rect2.top ||
-      rect1.top > rect2.bottom
-    );
-}
-
-function adjustFooterPosition() {
-    try {
-        const footer = document.getElementsByTagName('footer')[0];
-        const addJob = document.getElementsByClassName('add-job')[0];
-
-        if (isOverlapping(addJob, footer)) {
-            console.log('overlap');
+function adjustFooterPosition(entries) {
+    const footer = document.getElementsByTagName('footer')[0];
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
             footer.style.position = 'relative';
-        } else {
-            console.log('no overlap');
         }
-    } catch(e) {
-    }
+    });
 }
 
-// Call the function initially and also on window resize
-adjustFooterPosition();
-window.addEventListener('resize', adjustFooterPosition);
-window.addEventListener('scroll', adjustFooterPosition);
+document.addEventListener('DOMContentLoaded', () => {
+    const footer = document.getElementsByTagName('footer')[0];
+    const addJob = document.getElementsByClassName('add-job')[0];
+
+    if (footer && addJob) {
+        const observer = new IntersectionObserver(adjustFooterPosition, {
+            root: null, // Use the viewport as the container
+            threshold: 0.01 // Adjust this threshold to trigger overlap earlier if needed
+        });
+
+        observer.observe(addJob); // Observe the `add-job` element
+    }
+});
+
