@@ -73,7 +73,10 @@ function adjustFooterPosition() {
         const addJob = document.getElementsByClassName('add-job')[0];
 
         if (isOverlapping(addJob, footer)) {
+            console.log('overlap');
             footer.style.position = 'relative';
+        } else {
+            console.log('no overlap');
         }
     } catch(e) {
     }
@@ -82,3 +85,4 @@ function adjustFooterPosition() {
 // Call the function initially and also on window resize
 adjustFooterPosition();
 window.addEventListener('resize', adjustFooterPosition);
+window.addEventListener('scroll', adjustFooterPosition);
